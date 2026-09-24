@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Karigar Saathi — AI virtual business manager for artisans and micro entrepreneurs">
+  
+  
+  <style>:root {
+  --ink: #17312e; --muted: #687b77; --teal: #0f766e; --teal-dark: #0b5f59;
+  --teal-soft: #e6f5f2; --cream: #fbfaf6; --card: #ffffff; --line: #e5ebe8;
+  --amber: #e9992b; --amber-soft: #fff3dc; --rose: #d96673; --rose-soft: #ffebee;
+  --shadow: 0 12px 32px rgba(28, 69, 62, .09); --radius: 22px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: #edf2ef; color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans Devanagari", "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, textarea, select { font: inherit; }
+button { color: inherit; }
+button, [role="button"] { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex]:focus-visible { outline: 3px solid rgba(15,118,110,.25); outline-offset: 2px; }
+.skip-link { position: fixed; left: 12px; top: -60px; z-index: 200; padding: 10px 14px; background: var(--ink); color: white; border-radius: 12px; transition: .2s; }
+.skip-link:focus { top: 12px; }
+.offline-banner { display: none; position: fixed; z-index: 160; top: 0; left: 50%; transform: translateX(-50%); width: min(100%, 760px); padding: 9px; text-align: center; background: #5b4636; color: white; font-size: 13px; }
+.offline .offline-banner { display: block; }
+.app-shell { position: relative; width: min(100%, 760px); min-height: 100vh; margin: auto; padding-bottom: 94px; background: var(--cream); box-shadow: 0 0 80px rgba(27,62,57,.14); }
+.topbar { position: sticky; top: 0; z-index: 40; display: flex; justify-content: space-between; align-items: center; min-height: 74px; padding: 12px 20px; background: rgba(251,250,246,.92); border-bottom: 1px solid rgba(229,235,232,.7); backdrop-filter: blur(14px); }
+.brand { display: flex; align-items: center; gap: 11px; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.brand-mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 14px 14px 14px 4px; background: var(--teal); color: white; font-size: 23px; font-weight: 800; box-shadow: 0 8px 18px rgba(15,118,110,.22); }
+.brand strong, .brand small { display: block; }
+.brand strong { font-size: 16px; letter-spacing: -.2px; }
+.brand small { margin-top: 2px; color: var(--muted); font-size: 10px; }
+.top-actions { display: flex; gap: 7px; align-items: center; }
+.language-button, .icon-button { height: 40px; border: 1px solid var(--line); background: white; border-radius: 13px; cursor: pointer; }
+.language-button { padding: 0 12px; color: var(--teal); font-size: 12px; font-weight: 750; }
+.icon-button { display: grid; place-items: center; width: 40px; font-size: 17px; }
+.notification-button { position: relative; }
+.notification-dot { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border: 2px solid white; border-radius: 50%; background: #e85252; }
+.view { display: none; padding: 12px 20px 30px; animation: fadeUp .28s ease; }
+.view.active { display: block; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(5px); } }
+.hero-card { position: relative; overflow: hidden; display: flex; justify-content: space-between; min-height: 166px; padding: 26px 22px; border-radius: 26px; background: linear-gradient(135deg, #0b625c, #128a7e); color: white; box-shadow: 0 18px 36px rgba(15,118,110,.18); }
+.hero-card::after { content: ""; position: absolute; width: 190px; height: 190px; border-radius: 50%; right: -60px; bottom: -105px; background: rgba(255,255,255,.08); }
+.eyebrow { margin: 0 0 6px; color: var(--teal); font-size: 11px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.hero-card .eyebrow { color: #c7f3eb; }
+.hero-card h1 { max-width: 360px; margin: 0 0 8px; font-size: clamp(23px, 5vw, 31px); line-height: 1.2; }
+.hero-card p:last-child { max-width: 380px; margin: 0; color: #d9f4ee; font-size: 13px; line-height: 1.6; }
+.hero-illustration { position: relative; flex: 0 0 100px; align-self: stretch; }
+.hero-illustration > span { position: absolute; right: 2px; bottom: 5px; z-index: 2; font-size: 72px; filter: drop-shadow(0 9px 8px rgba(0,0,0,.12)); }
+.hero-illustration i { position: absolute; right: -10px; top: -25px; width: 92px; height: 92px; border-radius: 50%; background: rgba(255,255,255,.1); }
+.hero-illustration b { position: absolute; z-index: 3; right: 4px; top: 19px; padding: 6px 8px; border-radius: 9px; background: var(--amber); color: #543408; font-size: 10px; transform: rotate(5deg); }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 16px; }
+.stat-card { display: flex; align-items: center; gap: 11px; min-height: 78px; padding: 14px; border: 1px solid var(--line); border-radius: 18px; background: white; box-shadow: 0 5px 18px rgba(36,62,58,.04); }
+.stat-card.wide { grid-column: 1/-1; }
+.stat-icon { display: grid; place-items: center; flex: 0 0 42px; height: 42px; border-radius: 13px; font-size: 18px; font-style: normal; }
+.stat-icon.teal { background: var(--teal-soft); } .stat-icon.amber { background: var(--amber-soft); } .stat-icon.rose { background: var(--rose-soft); color: var(--rose); font-weight: 800; }
+.stat-card strong, .stat-card small { display: block; }
+.stat-card strong { font-size: 19px; } .stat-card small { margin-top: 3px; color: var(--muted); font-size: 11px; }
+.positive { margin-left: auto; padding: 5px 8px; border-radius: 9px; background: var(--teal-soft); color: var(--teal); font-size: 11px; font-weight: 800; }
+.assistant-card { display: flex; align-items: center; gap: 13px; padding: 16px; border: 1px solid #cde4df; border-radius: 22px; background: linear-gradient(115deg, #f0faf8, #fff); box-shadow: var(--shadow); }
+.assistant-orb { display: grid; place-items: center; flex: 0 0 52px; height: 52px; border-radius: 18px; background: var(--teal); color: white; box-shadow: 0 8px 18px rgba(15,118,110,.22); }
+.assistant-orb span { font-size: 23px; animation: twinkle 2s infinite; }
+@keyframes twinkle { 50% { transform: rotate(12deg) scale(1.12); } }
+.assistant-copy { flex: 1; min-width: 0; }
+.online-pill { color: var(--teal); font-size: 9px; font-weight: 800; letter-spacing: .06em; }
+.assistant-copy h2 { margin: 4px 0 2px; font-size: 16px; }
+.assistant-copy p { overflow: hidden; margin: 0; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.mic-button { display: grid; place-items: center; flex: 0 0 47px; height: 47px; border: 0; border-radius: 50%; background: var(--amber); cursor: pointer; box-shadow: 0 7px 15px rgba(233,153,43,.24); }
+.mic-button.listening { animation: pulse 1.2s infinite; background: #df5555; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 10px rgba(223,85,85,.12); } }
+.section-block { margin-top: 26px; }
+.section-heading, .page-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 15px; }
+.section-heading h2, .page-heading h1 { margin: 0; letter-spacing: -.02em; }
+.section-heading h2 { font-size: 19px; }
+.page-heading { align-items: center; margin: 10px 0 20px; }
+.page-heading h1 { font-size: 27px; }
+.page-heading p:last-child { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+.text-button { border: 0; background: none; color: var(--teal); font-size: 11px; font-weight: 800; cursor: pointer; }
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-top: 13px; }
+.quick-card { display: flex; flex-direction: column; align-items: flex-start; min-height: 125px; padding: 17px; border: 1px solid var(--line); border-radius: 20px; background: white; cursor: pointer; text-align: left; transition: transform .2s, box-shadow .2s; }
+.quick-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.quick-card > span { display: grid; place-items: center; width: 37px; height: 37px; margin-bottom: 13px; border-radius: 12px; background: var(--teal-soft); color: var(--teal); font-size: 19px; font-weight: 800; }
+.quick-card strong { font-size: 14px; } .quick-card small { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.quick-card.primary { border-color: transparent; background: var(--teal); color: white; box-shadow: 0 12px 25px rgba(15,118,110,.18); }
+.quick-card.primary > span { background: rgba(255,255,255,.16); color: white; }
+.quick-card.primary small { color: #c9eee8; }
+.product-scroll { display: grid; grid-auto-columns: minmax(182px, 45%); grid-auto-flow: column; gap: 12px; overflow-x: auto; margin: 13px -20px 0; padding: 0 20px 10px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.product-scroll::-webkit-scrollbar { display: none; }
+.mini-product { overflow: hidden; border: 1px solid var(--line); border-radius: 19px; background: white; scroll-snap-align: start; }
+.mini-product .image-wrap { position: relative; height: 125px; background: #eef2ef; }
+.mini-product img, .catalogue-card img, .publish-image img, .enhanced-preview img { width: 100%; height: 100%; object-fit: cover; }
+.status-pill { position: absolute; top: 9px; left: 9px; padding: 4px 7px; border-radius: 8px; background: rgba(255,255,255,.9); color: var(--teal); font-size: 9px; font-weight: 800; backdrop-filter: blur(6px); }
+.mini-product .product-copy { padding: 12px; }
+.mini-product strong, .mini-product small { display: block; }
+.mini-product strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.mini-product small { margin-top: 4px; color: var(--muted); font-size: 9px; }
+.product-price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 11px; }
+.product-price-row b { color: var(--teal); font-size: 14px; }
+.product-price-row span { color: var(--muted); font-size: 9px; }
+.tip-card { display: flex; align-items: flex-start; gap: 12px; margin-top: 25px; padding: 15px; border: 1px solid #f2dfb3; border-radius: 18px; background: #fff9ea; }
+.tip-icon { display: grid; place-items: center; flex: 0 0 36px; height: 36px; border-radius: 12px; background: var(--amber-soft); }
+.tip-card strong { font-size: 12px; } .tip-card p { margin: 3px 0 0; color: #6f614a; font-size: 10px; line-height: 1.55; }
+.tip-card button { margin-left: auto; border: 0; background: none; color: #947d58; font-size: 18px; cursor: pointer; }
+.primary-button, .secondary-button { min-height: 47px; padding: 0 20px; border-radius: 14px; font-weight: 800; cursor: pointer; }
+.primary-button { border: 0; background: var(--teal); color: white; box-shadow: 0 8px 18px rgba(15,118,110,.18); }
+.primary-button:hover { background: var(--teal-dark); }
+.primary-button.compact { min-height: 41px; padding: 0 14px; font-size: 12px; }
+.primary-button.full { width: 100%; }
+.secondary-button { border: 1px solid #cfdad6; background: white; color: var(--teal); }
+.count-badge { padding: 7px 10px; border-radius: 11px; background: var(--amber-soft); color: #9a5e0b; font-size: 11px; font-weight: 800; }
+.search-row { display: flex; gap: 8px; }
+.search-box { display: flex; align-items: center; flex: 1; gap: 8px; padding: 0 13px; border: 1px solid var(--line); border-radius: 14px; background: white; }
+.search-box input { width: 100%; height: 46px; border: 0; outline: 0; background: transparent; }
+.search-box span { color: var(--muted); font-size: 22px; }
+.filter-button { border: 1px solid var(--line); border-radius: 14px; background: white; font-size: 12px; font-weight: 750; cursor: pointer; }
+.filter-chips, .order-tabs { display: flex; gap: 7px; overflow-x: auto; margin: 13px 0 15px; scrollbar-width: none; }
+.chip, .order-tabs button { flex: 0 0 auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 12px; background: white; color: var(--muted); font-size: 11px; font-weight: 750; cursor: pointer; }
+.chip.active, .order-tabs button.active { border-color: var(--teal); background: var(--teal); color: white; }
+.catalogue-list, .order-list { display: grid; gap: 11px; }
+.catalogue-card { display: grid; grid-template-columns: 90px 1fr auto; gap: 13px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+.catalogue-card .catalogue-image { position: relative; overflow: hidden; width: 90px; height: 90px; border-radius: 13px; background: #edf1ee; }
+.catalogue-copy { min-width: 0; }
+.catalogue-copy h3 { overflow: hidden; margin: 0; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.catalogue-copy p { margin: 5px 0 9px; color: var(--muted); font-size: 10px; }
+.catalogue-copy strong { color: var(--teal); font-size: 14px; }
+.stock-low { color: #c55252 !important; }
+.more-button { align-self: start; width: 32px; height: 32px; border: 0; border-radius: 10px; background: #f3f6f4; cursor: pointer; }
+.empty-state { padding: 55px 20px; text-align: center; color: var(--muted); }
+.empty-state span { font-size: 42px; } .empty-state h2 { margin: 12px 0 4px; color: var(--ink); font-size: 17px; } .empty-state p { margin: 0; font-size: 12px; }
+.hidden { display: none !important; }
+.order-tabs { border-bottom: 1px solid var(--line); }
+.order-tabs button { border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: transparent; }
+.order-tabs button.active { border-bottom-color: var(--teal); background: transparent; color: var(--teal); }
+.order-card { padding: 15px; border: 1px solid var(--line); border-radius: 19px; background: white; }
+.order-top, .order-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.order-top small { color: var(--muted); font-size: 10px; } .order-top span { padding: 5px 8px; border-radius: 8px; background: var(--amber-soft); color: #9a5e0b; font-size: 9px; font-weight: 800; }
+.order-customer { display: flex; align-items: center; gap: 11px; margin: 14px 0; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.order-thumb { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 13px; background: var(--teal-soft); font-size: 22px; }
+.order-customer strong, .order-customer small { display: block; } .order-customer strong { font-size: 13px; } .order-customer small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.order-bottom strong { font-size: 15px; } .order-bottom button { min-height: 36px; padding: 0 12px; border: 0; border-radius: 11px; background: var(--teal); color: white; font-size: 10px; font-weight: 800; cursor: pointer; }
+.revenue-card { padding: 20px; border-radius: 24px; background: var(--ink); color: white; box-shadow: var(--shadow); }
+.revenue-card > p { margin: 0; color: #b8ccc8; font-size: 11px; }
+.revenue-card h2 { margin: 5px 0; font-size: 30px; }
+.revenue-card > span { color: #87dacd; font-size: 10px; }
+.bar-chart { display: flex; align-items: end; justify-content: space-between; height: 120px; margin-top: 18px; border-bottom: 1px solid rgba(255,255,255,.16); }
+.bar-chart i { width: 8%; border-radius: 8px 8px 2px 2px; background: #58726e; }
+.bar-chart i.current { background: var(--amber); }
+.chart-labels { display: flex; justify-content: space-between; padding-top: 8px; color: #91aaa5; font-size: 8px; }
+.insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.insight-grid article { padding: 17px; border: 1px solid var(--line); border-radius: 18px; background: white; }
+.insight-grid span, .insight-grid strong, .insight-grid small { display: block; }
+.insight-grid span { font-size: 20px; } .insight-grid strong { margin-top: 8px; font-size: 20px; } .insight-grid small { margin-top: 3px; color: var(--muted); font-size: 10px; }
+.recommendation-list { display: grid; gap: 10px; margin-top: 13px; }
+.recommendation-list article { display: flex; align-items: center; gap: 11px; padding: 14px; border: 1px solid var(--line); border-radius: 17px; background: white; }
+.recommendation-icon { display: grid; place-items: center; flex: 0 0 40px; height: 40px; border-radius: 13px; background: var(--teal-soft); }
+.recommendation-list div { flex: 1; } .recommendation-list strong { font-size: 12px; } .recommendation-list p { margin: 3px 0 0; color: var(--muted); font-size: 9px; line-height: 1.45; }
+.recommendation-list button { border: 0; background: none; color: var(--teal); font-size: 10px; font-weight: 800; cursor: pointer; }
+.profile-hero { padding: 30px 15px 24px; text-align: center; }
+.avatar-large { display: grid; place-items: center; width: 86px; height: 86px; margin: auto; border: 5px solid white; border-radius: 50%; background: var(--amber-soft); color: #96601a; font-size: 33px; font-weight: 850; box-shadow: var(--shadow); }
+.profile-hero h1 { margin: 13px 0 4px; font-size: 23px; } .profile-hero p { margin: 0; color: var(--muted); font-size: 11px; } .profile-hero span { display: inline-block; margin-top: 9px; padding: 5px 8px; border-radius: 9px; background: var(--teal-soft); color: var(--teal); font-size: 9px; font-weight: 800; }
+.profile-menu { overflow: hidden; border: 1px solid var(--line); border-radius: 20px; background: white; }
+.profile-menu button { display: flex; align-items: center; width: 100%; gap: 12px; padding: 14px; border: 0; border-bottom: 1px solid var(--line); background: white; text-align: left; cursor: pointer; }
+.profile-menu button:last-child { border-bottom: 0; } .profile-menu button > span { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 12px; background: #f3f6f4; } .profile-menu button div { flex: 1; } .profile-menu strong, .profile-menu small { display: block; } .profile-menu strong { font-size: 12px; } .profile-menu small { margin-top: 3px; color: var(--muted); font-size: 9px; } .profile-menu b { color: #9aaba7; font-size: 20px; }
+.version-text { margin-top: 22px; text-align: center; color: #a0aca9; font-size: 9px; }
+.bottom-nav { position: fixed; z-index: 50; bottom: 0; left: 50%; display: grid; grid-template-columns: repeat(5,1fr); width: min(100%, 760px); min-height: 72px; padding: 7px 8px max(8px,env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(255,255,255,.96); box-shadow: 0 -8px 30px rgba(24,55,50,.07); transform: translateX(-50%); backdrop-filter: blur(14px); }
+.bottom-nav button { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border: 0; background: none; color: #81908d; cursor: pointer; }
+.bottom-nav button > span { font-size: 21px; line-height: 1; } .bottom-nav button small { font-size: 9px; font-weight: 750; } .bottom-nav button.active { color: var(--teal); } .bottom-nav button i { position: absolute; top: 1px; right: calc(50% - 20px); display: grid; place-items: center; width: 15px; height: 15px; border-radius: 50%; background: #e95a5a; color: white; font-size: 8px; font-style: normal; }
+.modal-backdrop { position: fixed; z-index: 100; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 20px; background: rgba(10,35,31,.52); backdrop-filter: blur(5px); }
+.modal-backdrop[hidden] { display: none; }
+.modal-sheet { overflow-y: auto; width: min(100%,760px); max-height: 94vh; padding: 20px 20px max(20px,env(safe-area-inset-bottom)); border-radius: 28px 28px 0 0; background: var(--cream); box-shadow: 0 -20px 60px rgba(0,0,0,.2); animation: sheetUp .28s ease; }
+@keyframes sheetUp { from { transform: translateY(30px); opacity: .7; } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; }
+.modal-header h2 { margin: 0; font-size: 21px; }
+.close-button { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 13px; background: white; color: var(--muted); font-size: 24px; cursor: pointer; }
+.stepper { display: flex; align-items: center; justify-content: center; margin: 20px 0; }
+.stepper span { display: grid; place-items: center; width: 30px; height: 30px; border: 2px solid #ced8d5; border-radius: 50%; background: white; color: #8c9a97; font-size: 11px; font-weight: 850; }
+.stepper span.active { border-color: var(--teal); background: var(--teal); color: white; }
+.stepper i { width: 55px; height: 2px; background: #dfe6e3; }
+.form-step { display: none; }
+.form-step.active { display: block; animation: fadeUp .25s ease; }
+.upload-zone { position: relative; overflow: hidden; display: grid; place-items: center; min-height: 210px; margin-bottom: 15px; border: 2px dashed #bfd0cc; border-radius: 21px; background: #f2f8f6; text-align: center; cursor: pointer; }
+.upload-zone:hover { border-color: var(--teal); }
+.upload-zone > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#uploadPrompt { position: relative; z-index: 2; } #uploadPrompt > span { display: block; font-size: 38px; } #uploadPrompt strong { display: block; margin-top: 8px; font-size: 14px; } #uploadPrompt p { margin: 4px 0 12px; color: var(--muted); font-size: 10px; } #uploadPrompt .secondary-button { min-height: 37px; font-size: 10px; }
+.field-label { display: block; margin-top: 13px; color: #455d58; font-size: 11px; font-weight: 800; }
+.field-label input, .field-label textarea, .field-label select, .result-card textarea { display: block; width: 100%; margin-top: 6px; border: 1px solid #d9e2df; border-radius: 13px; background: white; color: var(--ink); outline: 0; }
+.field-label input, .field-label select { height: 46px; padding: 0 12px; }
+.field-label textarea, .result-card textarea { resize: vertical; padding: 11px 12px; line-height: 1.5; }
+.field-label input:focus, .field-label textarea:focus, .field-label select:focus, .result-card textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(15,118,110,.1); }
+.two-fields { display: grid; grid-template-columns: 1.4fr .6fr; gap: 10px; }
+.voice-field { display: flex; align-items: center; gap: 11px; width: 100%; margin-top: 13px; padding: 11px; border: 1px solid #d8e4e1; border-radius: 14px; background: var(--teal-soft); color: var(--teal); text-align: left; cursor: pointer; }
+.voice-field > span { font-size: 20px; } .voice-field strong, .voice-field small { display: block; } .voice-field strong { font-size: 11px; } .voice-field small { margin-top: 2px; color: #5f817b; font-size: 9px; }
+.modal-footer { position: sticky; bottom: -20px; display: flex; gap: 10px; margin: 20px -20px -20px; padding: 14px 20px max(14px,env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: rgba(251,250,246,.96); backdrop-filter: blur(12px); }
+.modal-footer button { flex: 1; }
+.ai-progress { padding: 60px 20px; text-align: center; }
+.ai-spinner { display: grid; place-items: center; width: 70px; height: 70px; margin: auto; border-radius: 24px; background: var(--teal); color: white; font-size: 30px; animation: aiFloat 1.3s infinite alternate ease-in-out; box-shadow: 0 14px 30px rgba(15,118,110,.25); }
+@keyframes aiFloat { to { transform: translateY(-8px) rotate(8deg); } }
+.ai-progress h3 { margin: 20px 0 6px; font-size: 17px; } .ai-progress p { margin: 0; color: var(--muted); font-size: 11px; }
+.progress-track { overflow: hidden; height: 7px; margin: 20px auto 0; border-radius: 9px; background: #e1e8e5; }
+.progress-track i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--teal); transition: width .45s ease; }
+.success-banner { padding: 12px; border-radius: 13px; background: var(--teal-soft); color: var(--teal); text-align: center; font-size: 11px; font-weight: 800; }
+.result-card { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 17px; background: white; }
+.result-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
+.result-heading > span { display: grid; place-items: center; width: 29px; height: 29px; border-radius: 10px; background: var(--teal-soft); color: var(--teal); font-weight: 850; }
+.result-heading strong { font-size: 11px; } .result-heading em { margin-left: auto; color: var(--teal); font-size: 8px; font-style: normal; font-weight: 800; } .result-heading button { margin-left: auto; border: 0; background: none; color: var(--teal); font-size: 9px; font-weight: 800; cursor: pointer; }
+.enhanced-preview { position: relative; overflow: hidden; height: 180px; border-radius: 13px; background: #e5ebe8; }
+.enhanced-preview span, .enhanced-preview b { position: absolute; bottom: 9px; padding: 5px 8px; border-radius: 8px; background: rgba(255,255,255,.88); font-size: 8px; }
+.enhanced-preview span { left: 9px; opacity: .65; } .enhanced-preview b { right: 9px; color: var(--teal); }
+.result-card label { display: block; margin-top: 9px; color: var(--muted); font-size: 9px; font-weight: 800; }
+.price-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+.price-choice > div { padding: 11px; border-radius: 12px; background: var(--teal-soft); } .price-choice small, .price-choice strong { display: block; } .price-choice small { color: var(--muted); font-size: 8px; } .price-choice strong { margin-top: 3px; color: var(--teal); font-size: 21px; }
+.price-choice label { margin: 0; } .price-choice input { width: 100%; height: 40px; margin-top: 5px; padding: 0 9px; border: 1px solid var(--line); border-radius: 10px; }
+.price-result > p { margin: 10px 0 0; color: var(--muted); font-size: 9px; }
+.publish-preview { display: grid; grid-template-columns: 135px 1fr; gap: 15px; padding: 12px; border: 1px solid var(--line); border-radius: 19px; background: white; }
+.publish-image { position: relative; overflow: hidden; height: 135px; border-radius: 14px; background: #e7ece9; }
+.publish-image span { position: absolute; bottom: 7px; left: 7px; padding: 4px 6px; border-radius: 7px; background: rgba(255,255,255,.92); color: var(--teal); font-size: 7px; font-weight: 800; }
+.publish-preview h3 { margin: 0 0 6px; font-size: 16px; } .publish-preview div > p:not(.eyebrow) { display: -webkit-box; overflow: hidden; margin: 0 0 10px; color: var(--muted); font-size: 9px; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 3; } .publish-preview div > strong { color: var(--teal); font-size: 18px; }
+.channel-fieldset { display: grid; gap: 9px; margin: 17px 0; padding: 0; border: 0; }
+.channel-fieldset legend { margin-bottom: 10px; font-size: 12px; font-weight: 850; }
+.channel-fieldset label { display: flex; align-items: center; gap: 11px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: white; cursor: pointer; }
+.channel-fieldset input { accent-color: var(--teal); } .channel-fieldset label span { flex: 1; } .channel-fieldset b, .channel-fieldset small { display: block; } .channel-fieldset b { font-size: 11px; } .channel-fieldset small { margin-top: 3px; color: var(--muted); font-size: 8px; } .channel-fieldset i { display: none; color: var(--teal); font-style: normal; font-weight: 850; } .channel-fieldset input:checked ~ i { display: block; }
+.ready-checklist { padding: 13px; border-radius: 15px; background: var(--teal-soft); } .ready-checklist p { margin: 6px 0; color: #466b65; font-size: 10px; } .ready-checklist span { color: var(--teal); font-weight: 900; }
+.small-modal { align-items: center; padding: 18px; }
+.small-modal .modal-sheet { max-width: 480px; border-radius: 27px; }
+.price-tool { padding-top: 8px; }
+.price-meter { position: relative; display: flex; justify-content: space-between; margin: 27px 6px 0; padding-top: 12px; border-top: 8px solid transparent; border-image: linear-gradient(90deg,#e87575,#efb84a,#31a48e) 1; color: var(--muted); font-size: 8px; }
+.price-meter i { position: absolute; top: -14px; left: 62%; width: 4px; height: 20px; border-radius: 5px; background: var(--ink); }
+.suggested-price { margin: 22px 0; padding: 20px; border-radius: 19px; background: var(--teal-soft); text-align: center; } .suggested-price small, .suggested-price strong { display: block; } .suggested-price small { color: var(--muted); font-size: 9px; } .suggested-price strong { margin: 6px 0; color: var(--teal); font-size: 32px; } .suggested-price p { margin: 0; color: #5b7772; font-size: 9px; }
+.toast { position: fixed; z-index: 170; left: 50%; bottom: 92px; max-width: calc(100% - 36px); padding: 12px 16px; border-radius: 13px; background: var(--ink); color: white; font-size: 11px; opacity: 0; pointer-events: none; transform: translate(-50%,15px); transition: .25s; box-shadow: 0 12px 28px rgba(0,0,0,.18); }
+.toast.show { opacity: 1; transform: translate(-50%,0); }
+@media (min-width: 700px) {
+  .view { padding: 18px 32px 38px; } .topbar { padding-left: 32px; padding-right: 32px; }
+  .quick-grid { grid-template-columns: repeat(4,1fr); } .quick-card { min-height: 138px; }
+  .stats-grid { grid-template-columns: 1fr 1fr 1.35fr; } .stat-card.wide { grid-column: auto; }
+  .product-scroll { grid-auto-columns: 210px; margin-left: -32px; margin-right: -32px; padding-left: 32px; padding-right: 32px; }
+  .catalogue-list { grid-template-columns: 1fr 1fr; } .catalogue-card { grid-template-columns: 82px 1fr auto; } .catalogue-card .catalogue-image { width: 82px; height: 82px; }
+  .modal-sheet { padding-left: 34px; padding-right: 34px; } .modal-footer { margin-left: -34px; margin-right: -34px; padding-left: 34px; padding-right: 34px; }
+}
+@media (max-width: 390px) { .hero-illustration { flex-basis: 75px; } .hero-illustration > span { font-size: 57px; } .hero-card { padding: 22px 18px; } .publish-preview { grid-template-columns: 105px 1fr; } .publish-image { height: 115px; } }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+</style>
+  <title>Karigar Saathi</title>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">मुख्य भाग पर जाएँ</a>
+  <div class="offline-banner" id="offlineBanner" role="status">आप ऑफलाइन हैं — आपका काम सुरक्षित रहेगा</div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" data-route="home" aria-label="होम">
+        <span class="brand-mark" aria-hidden="true">क</span>
+        <span><strong>कारीगर साथी</strong><small>आपका AI व्यापार सहायक</small></span>
+      </button>
+      <div class="top-actions">
+        <button class="language-button" id="languageButton" aria-label="भाषा बदलें">हिंदी</button>
+        <button class="icon-button notification-button" id="notificationButton" aria-label="सूचनाएँ">
+          <span aria-hidden="true">🔔</span><span class="notification-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section class="view active" id="homeView" data-view="home">
+        <div class="hero-card">
+          <div>
+            <p class="eyebrow" id="todayLabel">आज आपका व्यापार</p>
+            <h1 id="greetingText">नमस्ते, मीरा जी 👋</h1>
+            <p id="heroSubtitle">आपकी दुकान अच्छी चल रही है। आज 3 नए ऑर्डर मिले हैं।</p>
+          </div>
+          <div class="hero-illustration" aria-hidden="true">
+            <span>🧺</span><i></i><b>AI</b>
+          </div>
+        </div>
+
+        <div class="stats-grid" aria-label="व्यापार सारांश">
+          <article class="stat-card"><span class="stat-icon teal">📦</span><div><strong id="productCount">12</strong><small>सक्रिय उत्पाद</small></div></article>
+          <article class="stat-card"><span class="stat-icon amber">🛍️</span><div><strong id="orderCount">3</strong><small>आज के ऑर्डर</small></div></article>
+          <article class="stat-card wide"><span class="stat-icon rose">₹</span><div><strong id="salesTotal">₹18,450</strong><small>इस महीने बिक्री</small></div><span class="positive">↗ 12%</span></article>
+        </div>
+
+        <section class="assistant-card" aria-labelledby="assistantTitle">
+          <div class="assistant-orb" aria-hidden="true"><span>✦</span></div>
+          <div class="assistant-copy">
+            <span class="online-pill">● AI तैयार है</span>
+            <h2 id="assistantTitle">क्या मदद चाहिए?</h2>
+            <p id="assistantPrompt">बोलकर बताइए — “नया उत्पाद जोड़ो”</p>
+          </div>
+          <button class="mic-button" id="micButton" aria-label="बोलकर निर्देश दें"><span>🎙️</span></button>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading"><div><p class="eyebrow">जल्दी शुरू करें</p><h2>आप क्या करना चाहते हैं?</h2></div></div>
+          <div class="quick-grid">
+            <button class="quick-card primary" id="addProductButton"><span>＋</span><strong>नया उत्पाद</strong><small>फोटो लेकर जोड़ें</small></button>
+            <button class="quick-card" data-route="catalogue"><span>▦</span><strong>मेरी सूची</strong><small>उत्पाद देखें</small></button>
+            <button class="quick-card" data-route="orders"><span>🧾</span><strong>ऑर्डर</strong><small>ऑर्डर संभालें</small></button>
+            <button class="quick-card" id="pricingButton"><span>₹</span><strong>सही कीमत</strong><small>AI सुझाव पाएँ</small></button>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading"><div><p class="eyebrow">आपके उत्पाद</p><h2>अच्छा प्रदर्शन</h2></div><button class="text-button" data-route="catalogue">सभी देखें →</button></div>
+          <div class="product-scroll" id="topProducts"></div>
+        </section>
+
+        <section class="tip-card">
+          <div class="tip-icon">💡</div>
+          <div><strong>आज का सुझाव</strong><p>“हाथ से बना” शब्द वाले उत्पादों को इस सप्ताह 18% अधिक लोग देख रहे हैं।</p></div>
+          <button aria-label="सुझाव बंद करें" id="dismissTip">×</button>
+        </section>
+      </section>
+
+      <section class="view" id="catalogueView" data-view="catalogue">
+        <div class="page-heading"><div><p class="eyebrow">डिजिटल दुकान</p><h1>मेरी उत्पाद सूची</h1><p>अपने सभी उत्पाद एक जगह से संभालें</p></div><button class="primary-button compact" id="catalogueAddButton">＋ जोड़ें</button></div>
+        <div class="search-row"><label class="search-box"><span>⌕</span><input id="productSearch" type="search" placeholder="उत्पाद खोजें" autocomplete="off"></label><button class="filter-button" id="filterButton">☷ फ़िल्टर</button></div>
+        <div class="filter-chips" id="filterChips"><button class="chip active" data-filter="all">सभी</button><button class="chip" data-filter="live">ऑनलाइन</button><button class="chip" data-filter="draft">ड्राफ्ट</button><button class="chip" data-filter="low">कम स्टॉक</button></div>
+        <div class="catalogue-list" id="catalogueList"></div>
+        <div class="empty-state hidden" id="catalogueEmpty"><span>🔍</span><h2>कोई उत्पाद नहीं मिला</h2><p>दूसरा नाम खोजकर देखें</p></div>
+      </section>
+
+      <section class="view" id="ordersView" data-view="orders">
+        <div class="page-heading"><div><p class="eyebrow">बिक्री प्रबंधन</p><h1>ऑर्डर</h1><p>नए ऑर्डर तैयार करके भेजें</p></div><span class="count-badge">3 नए</span></div>
+        <div class="order-tabs"><button class="active" data-order-filter="all">सभी</button><button data-order-filter="new">नए</button><button data-order-filter="packed">पैक</button><button data-order-filter="sent">भेजे गए</button></div>
+        <div class="order-list" id="orderList"></div>
+      </section>
+
+      <section class="view" id="insightsView" data-view="insights">
+        <div class="page-heading"><div><p class="eyebrow">आसान जानकारी</p><h1>व्यापार की प्रगति</h1><p>इस महीने का सरल हिसाब</p></div><button class="icon-button" id="downloadReport" aria-label="रिपोर्ट डाउनलोड करें">⇩</button></div>
+        <article class="revenue-card"><p>सितंबर की बिक्री</p><h2>₹18,450</h2><span>पिछले महीने से 12% अधिक</span><div class="bar-chart" aria-label="साप्ताहिक बिक्री ग्राफ"><i style="height:38%"></i><i style="height:55%"></i><i style="height:46%"></i><i style="height:78%"></i><i style="height:63%"></i><i style="height:92%"></i><i class="current" style="height:72%"></i></div><div class="chart-labels"><span>सोम</span><span>मंगल</span><span>बुध</span><span>गुरु</span><span>शुक्र</span><span>शनि</span><span>आज</span></div></article>
+        <div class="insight-grid"><article><span>👀</span><strong>1,284</strong><small>उत्पाद देखे गए</small></article><article><span>♡</span><strong>86</strong><small>पसंद किए गए</small></article></div>
+        <section class="section-block"><div class="section-heading"><div><p class="eyebrow">AI की सलाह</p><h2>बिक्री बढ़ाने के तरीके</h2></div></div><div class="recommendation-list"><article><span class="recommendation-icon">📷</span><div><strong>2 तस्वीरें और जोड़ें</strong><p>नीली मधुबनी पेंटिंग पर अधिक तस्वीरों से बिक्री बढ़ सकती है।</p></div><button data-route="catalogue">करें</button></article><article><span class="recommendation-icon">₹</span><div><strong>कीमत में छोटा बदलाव</strong><p>बांस की टोकरी की सुझाई कीमत ₹899 है।</p></div><button id="insightPricingButton">देखें</button></article></div></section>
+      </section>
+
+      <section class="view" id="profileView" data-view="profile">
+        <div class="profile-hero"><div class="avatar-large">म</div><h1>मीरा देवी</h1><p>मधुबनी कलाकार · बिहार</p><span>✓ पहचान सत्यापित</span></div>
+        <div class="profile-menu"><button><span>🏪</span><div><strong>दुकान की जानकारी</strong><small>नाम, पता और कहानी</small></div><b>›</b></button><button><span>🌐</span><div><strong>भाषा</strong><small>हिंदी</small></div><b>›</b></button><button><span>🔗</span><div><strong>बिक्री चैनल</strong><small>2 चैनल जुड़े हैं</small></div><b>›</b></button><button><span>❓</span><div><strong>मदद और प्रशिक्षण</strong><small>वीडियो और सहायता</small></div><b>›</b></button><button id="resetDemo"><span>↻</span><div><strong>डेमो रीसेट करें</strong><small>मूल नमूना डेटा वापस लाएँ</small></div><b>›</b></button></div>
+        <p class="version-text">कारीगर साथी · संस्करण 1.0</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="मुख्य नेविगेशन">
+      <button class="active" data-route="home"><span>⌂</span><small>होम</small></button>
+      <button data-route="catalogue"><span>▦</span><small>उत्पाद</small></button>
+      <button data-route="orders"><span>▤</span><small>ऑर्डर</small><i>3</i></button>
+      <button data-route="insights"><span>⌁</span><small>प्रगति</small></button>
+      <button data-route="profile"><span>○</span><small>प्रोफ़ाइल</small></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-sheet">
+      <div class="modal-header"><div><p class="eyebrow">AI उत्पाद सहायक</p><h2 id="modalTitle">नया उत्पाद जोड़ें</h2></div><button class="close-button" id="closeModal" aria-label="बंद करें">×</button></div>
+      <div class="stepper" aria-label="प्रगति"><span class="active">1</span><i></i><span>2</span><i></i><span>3</span></div>
+
+      <form id="productForm">
+        <section class="form-step active" data-step="1">
+          <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="उत्पाद की तस्वीर चुनें">
+            <input id="productImage" type="file" accept="image/*" capture="environment" hidden>
+            <img id="imagePreview" alt="चुनी हुई उत्पाद तस्वीर" hidden>
+            <div id="uploadPrompt"><span>📷</span><strong>उत्पाद की फोटो लें</strong><p>या गैलरी से चुनें</p><button type="button" class="secondary-button">फोटो चुनें</button></div>
+          </div>
+          <label class="field-label">उत्पाद का नाम<input id="productName" required maxlength="60" placeholder="जैसे — मधुबनी पेंटिंग"></label>
+          <div class="two-fields"><label class="field-label">श्रेणी<select id="productCategory"><option>हस्तकला</option><option>पेंटिंग</option><option>वस्त्र</option><option>घर सजावट</option><option>आभूषण</option></select></label><label class="field-label">स्टॉक<input id="productStock" required type="number" min="1" max="999" value="10"></label></div>
+          <label class="field-label">इसके बारे में थोड़ा बताएं<textarea id="productDetails" rows="3" placeholder="सामग्री, आकार या बनाने का तरीका"></textarea></label>
+          <button type="button" class="voice-field" id="voiceDetails"><span>🎙️</span><div><strong>लिखना मुश्किल है?</strong><small>बोलकर जानकारी दें</small></div></button>
+        </section>
+
+        <section class="form-step" data-step="2">
+          <div class="ai-progress" id="aiProgress"><div class="ai-spinner">✦</div><h3>AI आपका उत्पाद तैयार कर रहा है</h3><p id="aiProgressText">तस्वीर साफ की जा रही है…</p><div class="progress-track"><i id="progressBar"></i></div></div>
+          <div class="ai-results hidden" id="aiResults">
+            <div class="success-banner">✓ उत्पाद की जानकारी तैयार है</div>
+            <div class="result-card"><div class="result-heading"><span>✨</span><strong>साफ की गई तस्वीर</strong><em>AI बेहतर</em></div><div class="enhanced-preview"><img id="enhancedImage" alt="AI द्वारा बेहतर तस्वीर"><span>पहले</span><b>AI के बाद</b></div></div>
+            <div class="result-card"><div class="result-heading"><span>अ</span><strong>उत्पाद विवरण</strong><button type="button" id="editDescription">बदलें</button></div><label>हिंदी<textarea id="hindiDescription" rows="3"></textarea></label><label>English<textarea id="englishDescription" rows="3"></textarea></label></div>
+            <div class="result-card price-result"><div class="result-heading"><span>₹</span><strong>कीमत का सुझाव</strong><em>बाजार के अनुसार</em></div><div class="price-choice"><div><small>सुझाई कीमत</small><strong id="recommendedPrice">₹899</strong></div><label>आपकी कीमत ₹<input id="finalPrice" type="number" min="1" value="899"></label></div><p>समान हस्तनिर्मित उत्पाद ₹799 से ₹1,099 में बिक रहे हैं।</p></div>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="3">
+          <div class="publish-preview"><div class="publish-image"><img id="publishImage" alt="उत्पाद तस्वीर"><span>बिक्री के लिए तैयार</span></div><div><p class="eyebrow">आपका उत्पाद</p><h3 id="publishName">उत्पाद नाम</h3><p id="publishDescription"></p><strong id="publishPrice">₹899</strong></div></div>
+          <fieldset class="channel-fieldset"><legend>कहाँ बेचना है?</legend><label><input type="checkbox" name="channel" value="ONDC" checked><span><b>ONDC</b><small>पूरे भारत के खरीदार</small></span><i>✓</i></label><label><input type="checkbox" name="channel" value="Government e-Marketplace"><span><b>सरकारी ई-मार्केट</b><small>B2B और सरकारी खरीदार</small></span><i>✓</i></label><label><input type="checkbox" name="channel" value="My Digital Catalogue" checked><span><b>मेरी डिजिटल सूची</b><small>WhatsApp पर साझा करें</small></span><i>✓</i></label></fieldset>
+          <div class="ready-checklist"><p><span>✓</span> तस्वीर साफ और आकर्षक है</p><p><span>✓</span> हिंदी और अंग्रेज़ी विवरण तैयार है</p><p><span>✓</span> बाजार के अनुसार कीमत रखी गई है</p></div>
+        </section>
+
+        <div class="modal-footer"><button type="button" class="secondary-button" id="backStep" hidden>पीछे</button><button type="submit" class="primary-button" id="nextStep">आगे बढ़ें</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop small-modal" id="pricingModal" role="dialog" aria-modal="true" aria-labelledby="pricingTitle" hidden>
+    <div class="modal-sheet">
+      <div class="modal-header"><div><p class="eyebrow">AI कीमत सहायक</p><h2 id="pricingTitle">सही कीमत पाएँ</h2></div><button class="close-button" data-close="pricingModal" aria-label="बंद करें">×</button></div>
+      <div class="price-tool"><label class="field-label">उत्पाद<select id="pricingProduct"></select></label><div class="price-meter"><span>कम</span><span>सही</span><span>अधिक</span><i></i></div><div class="suggested-price"><small>सुझाई गई कीमत</small><strong id="pricingSuggestion">₹899</strong><p>बाजार, सामग्री और मेहनत के आधार पर</p></div><button class="primary-button full" id="applyPrice">यह कीमत रखें</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>(() => {
+  'use strict';
+  const svgProduct = (emoji, background, accent) => `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450"><rect width="600" height="450" fill="${background}"/><circle cx="505" cy="70" r="115" fill="${accent}" opacity=".18"/><circle cx="70" cy="390" r="135" fill="${accent}" opacity=".12"/><text x="300" y="275" text-anchor="middle" font-size="180">${emoji}</text><path d="M100 355 Q300 290 500 355" fill="none" stroke="${accent}" stroke-width="8" opacity=".28"/></svg>`)}`;
+  const seedProducts = [
+    {id: 1, name: 'मधुबनी मछली पेंटिंग', category: 'पेंटिंग', price: 1299, stock: 8, status: 'live', views: 142, image: svgProduct('🖼️','#f7e7d7','#c7634d'), description: 'हाथ से बनी पारंपरिक मधुबनी पेंटिंग, प्राकृतिक रंगों के साथ।'},
+    {id: 2, name: 'बांस की सजावटी टोकरी', category: 'घर सजावट', price: 849, stock: 3, status: 'live', views: 98, image: svgProduct('🧺','#efe5ca','#a4762c'), description: 'स्थानीय बांस से बुनी हुई मजबूत और सुंदर टोकरी।'},
+    {id: 3, name: 'हाथ बुना सूती दुपट्टा', category: 'वस्त्र', price: 1099, stock: 14, status: 'live', views: 76, image: svgProduct('🧣','#e7d8e9','#8d4e91'), description: 'नरम सूती धागे से हाथ करघे पर बुना दुपट्टा।'},
+    {id: 4, name: 'टेराकोटा दीया सेट', category: 'हस्तकला', price: 399, stock: 20, status: 'draft', views: 35, image: svgProduct('🪔','#f2dfcf','#bd6d39'), description: 'कारीगरों द्वारा हाथ से आकार और रंग दिया गया दीया सेट।'}
+  ];
+  const seedOrders = [
+    {id: 'KS-1048', customer: 'अंजलि शर्मा', city: 'जयपुर, राजस्थान', item: 'मधुबनी मछली पेंटिंग', amount: 1299, status: 'new', icon: '🖼️'},
+    {id: 'KS-1047', customer: 'राहुल वर्मा', city: 'पुणे, महाराष्ट्र', item: 'बांस की सजावटी टोकरी · 2', amount: 1698, status: 'new', icon: '🧺'},
+    {id: 'KS-1046', customer: 'स्मिता नायर', city: 'कोच्चि, केरल', item: 'हाथ बुना सूती दुपट्टा', amount: 1099, status: 'packed', icon: '🧣'},
+    {id: 'KS-1042', customer: 'नवीन सिंह', city: 'दिल्ली', item: 'टेराकोटा दीया सेट · 2', amount: 798, status: 'sent', icon: '🪔'}
+  ];
+  const state = {
+    products: JSON.parse(localStorage.getItem('ks_products') || 'null') || seedProducts,
+    orders: JSON.parse(localStorage.getItem('ks_orders') || 'null') || seedOrders,
+    currentView: 'home', currentStep: 1, imageData: '', toastTimer: null, language: 'hi'
+  };
+  const el = id => document.getElementById(id);
+  const money = value => `₹${Number(value).toLocaleString('en-IN')}`;
+  const persist = () => { localStorage.setItem('ks_products', JSON.stringify(state.products)); localStorage.setItem('ks_orders', JSON.stringify(state.orders)); };
+  const showToast = message => { const toast = el('toast'); toast.textContent = message; toast.classList.add('show'); clearTimeout(state.toastTimer); state.toastTimer = setTimeout(() => toast.classList.remove('show'), 2500); };
+  const statusLabel = status => status === 'live' ? 'ऑनलाइन' : 'ड्राफ्ट';
+  const orderStatusLabel = status => ({new:'नया ऑर्डर',packed:'पैक हो गया',sent:'भेज दिया'})[status];
+
+  function renderProducts() {
+    const topProducts = el('topProducts');
+    topProducts.innerHTML = state.products.filter(product => product.status === 'live').slice(0,5).map(product => `
+      <article class="mini-product"><div class="image-wrap"><img src="${product.image}" alt="${product.name}"><span class="status-pill">● ${statusLabel(product.status)}</span></div><div class="product-copy"><strong>${product.name}</strong><small>${product.views || 0} लोगों ने देखा</small><div class="product-price-row"><b>${money(product.price)}</b><span>${product.stock} उपलब्ध</span></div></div></article>`).join('');
+    applyCatalogueFilters();
+    el('productCount').textContent = state.products.filter(product => product.status === 'live').length;
+    const pricingSelect = el('pricingProduct');
+    pricingSelect.innerHTML = state.products.map(product => `<option value="${product.id}">${product.name}</option>`).join('');
+  }
+
+  function applyCatalogueFilters() {
+    const query = (el('productSearch')?.value || '').trim().toLowerCase();
+    const activeFilter = document.querySelector('#filterChips .chip.active')?.dataset.filter || 'all';
+    const matches = state.products.filter(product => {
+      const textMatch = `${product.name} ${product.category}`.toLowerCase().includes(query);
+      const filterMatch = activeFilter === 'all' || product.status === activeFilter || (activeFilter === 'low' && product.stock <= 3);
+      return textMatch && filterMatch;
+    });
+    el('catalogueList').innerHTML = matches.map(product => `
+      <article class="catalogue-card"><div class="catalogue-image"><img src="${product.image}" alt="${product.name}"><span class="status-pill">${statusLabel(product.status)}</span></div><div class="catalogue-copy"><h3>${product.name}</h3><p>${product.category} · <span class="${product.stock <= 3 ? 'stock-low' : ''}">${product.stock} स्टॉक</span></p><strong>${money(product.price)}</strong></div><button class="more-button" data-product-menu="${product.id}" aria-label="${product.name} के विकल्प">⋮</button></article>`).join('');
+    el('catalogueEmpty').classList.toggle('hidden', matches.length > 0);
+  }
+
+  function renderOrders(filter = 'all') {
+    const visibleOrders = state.orders.filter(order => filter === 'all' || order.status === filter);
+    el('orderList').innerHTML = visibleOrders.map(order => `<article class="order-card"><div class="order-top"><small>ऑर्डर #${order.id}</small><span>${orderStatusLabel(order.status)}</span></div><div class="order-customer"><div class="order-thumb">${order.icon}</div><div><strong>${order.item}</strong><small>${order.customer} · ${order.city}</small></div></div><div class="order-bottom"><strong>${money(order.amount)}</strong>${order.status === 'new' ? `<button data-pack-order="${order.id}">पैक करना शुरू करें</button>` : order.status === 'packed' ? `<button data-send-order="${order.id}">भेज दिया</button>` : '<small>✓ रास्ते में</small>'}</div></article>`).join('');
+  }
+
+  function navigate(route) {
+    state.currentView = route;
+    document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.dataset.view === route));
+    document.querySelectorAll('.bottom-nav button').forEach(button => button.classList.toggle('active', button.dataset.route === route));
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  function openProductModal() {
+    resetProductForm(); el('productModal').hidden = false; document.body.style.overflow = 'hidden'; setTimeout(() => el('productName').focus(), 250);
+  }
+  function closeProductModal() { el('productModal').hidden = true; document.body.style.overflow = ''; }
+  function resetProductForm() {
+    state.currentStep = 1; state.imageData = ''; el('productForm').reset(); el('productStock').value = 10; el('imagePreview').hidden = true; el('uploadPrompt').classList.remove('hidden'); el('aiProgress').classList.remove('hidden'); el('aiResults').classList.add('hidden'); el('progressBar').style.width = '0'; updateStepUI();
+  }
+  function updateStepUI() {
+    document.querySelectorAll('.form-step').forEach(step => step.classList.toggle('active', Number(step.dataset.step) === state.currentStep));
+    document.querySelectorAll('.stepper span').forEach((step, index) => step.classList.toggle('active', index < state.currentStep));
+    el('backStep').hidden = state.currentStep === 1; el('nextStep').textContent = state.currentStep === 3 ? 'उत्पाद प्रकाशित करें' : 'आगे बढ़ें';
+  }
+  function suggestedPrice() {
+    const category = el('productCategory').value;
+    const detailsLength = el('productDetails').value.length;
+    const base = ({'पेंटिंग':1199,'वस्त्र':999,'घर सजावट':799,'आभूषण':699,'हस्तकला':599})[category] || 699;
+    return Math.round((base + Math.min(detailsLength * 3, 180)) / 50) * 50 - 1;
+  }
+  function startAI() {
+    el('aiProgress').classList.remove('hidden'); el('aiResults').classList.add('hidden');
+    const stages = [{p:28,t:'तस्वीर साफ की जा रही है…'},{p:55,t:'उत्पाद को पहचाना जा रहा है…'},{p:78,t:'हिंदी और अंग्रेज़ी विवरण बन रहा है…'},{p:100,t:'सही कीमत खोजी जा रही है…'}];
+    stages.forEach((stage,index) => setTimeout(() => { el('progressBar').style.width = `${stage.p}%`; el('aiProgressText').textContent = stage.t; if (index === stages.length - 1) setTimeout(showAIResults, 450); }, index * 520));
+  }
+  function showAIResults() {
+    const name = el('productName').value.trim(); const category = el('productCategory').value; const details = el('productDetails').value.trim(); const price = suggestedPrice();
+    const image = state.imageData || svgProduct(category === 'पेंटिंग' ? '🖼️' : category === 'वस्त्र' ? '🧣' : category === 'आभूषण' ? '📿' : '🎨','#e7eee9','#317f73');
+    state.imageData = image; el('enhancedImage').src = image;
+    el('hindiDescription').value = `${name} एक सुंदर, हाथ से बनाया गया ${category} उत्पाद है। ${details || 'इसे पारंपरिक कौशल और ध्यान से तैयार किया गया है।'} हर वस्तु अपने आप में अनोखी है और स्थानीय कारीगरी की कहानी बताती है।`;
+    el('englishDescription').value = `${name} is a beautiful handcrafted ${category.toLowerCase()} product. ${details ? 'It is carefully made using traditional techniques and quality materials.' : 'It is created with traditional skills and close attention to detail.'} Every piece is unique and supports local craftsmanship.`;
+    el('recommendedPrice').textContent = money(price); el('finalPrice').value = price; el('aiProgress').classList.add('hidden'); el('aiResults').classList.remove('hidden');
+  }
+  function preparePublish() {
+    el('publishImage').src = state.imageData; el('publishName').textContent = el('productName').value.trim(); el('publishDescription').textContent = el('hindiDescription').value; el('publishPrice').textContent = money(el('finalPrice').value);
+  }
+  function publishProduct() {
+    const newProduct = {id: Date.now(), name: el('productName').value.trim(), category: el('productCategory').value, stock: Number(el('productStock').value), price: Number(el('finalPrice').value), status: 'live', views: 0, image: state.imageData, description: el('hindiDescription').value};
+    state.products.unshift(newProduct); persist(); renderProducts(); closeProductModal(); navigate('catalogue'); showToast('✓ उत्पाद सफलतापूर्वक ऑनलाइन हो गया');
+  }
+
+  document.addEventListener('click', event => {
+    const routeButton = event.target.closest('[data-route]'); if (routeButton) navigate(routeButton.dataset.route);
+    if (event.target.closest('#addProductButton') || event.target.closest('#catalogueAddButton')) openProductModal();
+    if (event.target.closest('#pricingButton') || event.target.closest('#insightPricingButton')) { el('pricingModal').hidden = false; document.body.style.overflow = 'hidden'; updatePricingTool(); }
+    const closeTarget = event.target.closest('[data-close]'); if (closeTarget) { el(closeTarget.dataset.close).hidden = true; document.body.style.overflow = ''; }
+    const menuButton = event.target.closest('[data-product-menu]'); if (menuButton) showToast('उत्पाद संपादन अगले संस्करण में उपलब्ध होगा');
+    const packButton = event.target.closest('[data-pack-order]'); if (packButton) { const order = state.orders.find(item => item.id === packButton.dataset.packOrder); order.status = 'packed'; persist(); renderOrders(document.querySelector('.order-tabs .active').dataset.orderFilter); showToast('✓ ऑर्डर पैकिंग में भेज दिया'); }
+    const sendButton = event.target.closest('[data-send-order]'); if (sendButton) { const order = state.orders.find(item => item.id === sendButton.dataset.sendOrder); order.status = 'sent'; persist(); renderOrders(document.querySelector('.order-tabs .active').dataset.orderFilter); showToast('✓ ग्राहक को भेजने की सूचना मिल गई'); }
+  });
+  el('closeModal').addEventListener('click', closeProductModal);
+  el('productModal').addEventListener('click', event => { if (event.target === el('productModal')) closeProductModal(); });
+  el('pricingModal').addEventListener('click', event => { if (event.target === el('pricingModal')) { el('pricingModal').hidden = true; document.body.style.overflow = ''; } });
+  el('uploadZone').addEventListener('click', () => el('productImage').click());
+  el('uploadZone').addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); el('productImage').click(); } });
+  el('productImage').addEventListener('change', event => { const file = event.target.files[0]; if (!file) return; if (file.size > 6 * 1024 * 1024) return showToast('तस्वीर 6 MB से छोटी रखें'); const reader = new FileReader(); reader.onload = () => { state.imageData = reader.result; el('imagePreview').src = reader.result; el('imagePreview').hidden = false; el('uploadPrompt').classList.add('hidden'); }; reader.readAsDataURL(file); });
+  el('productForm').addEventListener('submit', event => { event.preventDefault(); if (state.currentStep === 1) { if (!el('productForm').reportValidity()) return; state.currentStep = 2; updateStepUI(); startAI(); } else if (state.currentStep === 2) { if (el('aiResults').classList.contains('hidden')) return showToast('AI अभी काम कर रहा है'); preparePublish(); state.currentStep = 3; updateStepUI(); } else publishProduct(); });
+  el('backStep').addEventListener('click', () => { if (state.currentStep > 1) { state.currentStep -= 1; updateStepUI(); } });
+  el('productSearch').addEventListener('input', applyCatalogueFilters);
+  el('filterChips').addEventListener('click', event => { const chip = event.target.closest('.chip'); if (!chip) return; document.querySelectorAll('#filterChips .chip').forEach(item => item.classList.toggle('active', item === chip)); applyCatalogueFilters(); });
+  document.querySelector('.order-tabs').addEventListener('click', event => { const tab = event.target.closest('button'); if (!tab) return; document.querySelectorAll('.order-tabs button').forEach(item => item.classList.toggle('active', item === tab)); renderOrders(tab.dataset.orderFilter); });
+  el('micButton').addEventListener('click', () => { const button = el('micButton'); button.classList.add('listening'); el('assistantPrompt').textContent = 'सुन रहा हूँ…'; setTimeout(() => { button.classList.remove('listening'); el('assistantPrompt').textContent = '“नया उत्पाद जोड़ो” समझा गया'; setTimeout(openProductModal, 500); }, 1500); });
+  el('voiceDetails').addEventListener('click', () => { el('voiceDetails').innerHTML = '<span>⏺</span><div><strong>सुन रहा हूँ…</strong><small>अपने उत्पाद के बारे में बोलें</small></div>'; setTimeout(() => { el('productDetails').value = 'यह उत्पाद प्राकृतिक सामग्री से हाथ से बनाया गया है और इसे तैयार करने में तीन दिन लगते हैं।'; el('voiceDetails').innerHTML = '<span>✓</span><div><strong>जानकारी जोड़ दी गई</strong><small>आप इसे बदल भी सकते हैं</small></div>'; }, 1500); });
+  el('languageButton').addEventListener('click', () => { state.language = state.language === 'hi' ? 'en' : 'hi'; el('languageButton').textContent = state.language === 'hi' ? 'हिंदी' : 'English'; showToast(state.language === 'hi' ? 'भाषा हिंदी कर दी गई' : 'English preview enabled'); });
+  el('notificationButton').addEventListener('click', () => { showToast('3 नए ऑर्डर और 1 कीमत सुझाव'); document.querySelector('.notification-dot').style.display = 'none'; });
+  el('dismissTip').addEventListener('click', () => el('dismissTip').closest('.tip-card').remove());
+  el('filterButton').addEventListener('click', () => el('filterChips').scrollIntoView({behavior:'smooth',block:'center'}));
+  el('pricingProduct').addEventListener('change', updatePricingTool);
+  function updatePricingTool() { const product = state.products.find(item => String(item.id) === el('pricingProduct').value) || state.products[0]; const suggestion = Math.round(product.price * 1.06 / 50) * 50 - 1; el('pricingSuggestion').textContent = money(suggestion); el('pricingSuggestion').dataset.value = suggestion; }
+  el('applyPrice').addEventListener('click', () => { const product = state.products.find(item => String(item.id) === el('pricingProduct').value) || state.products[0]; product.price = Number(el('pricingSuggestion').dataset.value); persist(); renderProducts(); el('pricingModal').hidden = true; document.body.style.overflow = ''; showToast('✓ नई कीमत लागू हो गई'); });
+  el('downloadReport').addEventListener('click', () => { const rows = ['माह,बिक्री,ऑर्डर','सितंबर,18450,23','अगस्त,16470,20']; const blob = new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8'}); const url = URL.createObjectURL(blob); const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'karigar-saathi-report.csv'; anchor.click(); URL.revokeObjectURL(url); showToast('रिपोर्ट डाउनलोड हो गई'); });
+  el('resetDemo').addEventListener('click', () => { state.products = structuredClone(seedProducts); state.orders = structuredClone(seedOrders); persist(); renderProducts(); renderOrders(); showToast('✓ डेमो डेटा रीसेट हो गया'); });
+  window.addEventListener('online', () => { document.body.classList.remove('offline'); showToast('आप फिर से ऑनलाइन हैं'); });
+  window.addEventListener('offline', () => document.body.classList.add('offline'));
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') { if (!el('productModal').hidden) closeProductModal(); if (!el('pricingModal').hidden) { el('pricingModal').hidden = true; document.body.style.overflow = ''; } } });
+  const today = new Intl.DateTimeFormat('hi-IN',{weekday:'long',day:'numeric',month:'long'}).format(new Date()); el('todayLabel').textContent = `आज · ${today}`;
+  renderProducts(); renderOrders(); updatePricingTool();
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(() => {});
+})();</script>
+</body>
+</html>

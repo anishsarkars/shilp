@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Karigar Saathi — AI virtual business manager for artisans and micro entrepreneurs">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Karigar Saathi</title>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">मुख्य भाग पर जाएँ</a>
+  <div class="offline-banner" id="offlineBanner" role="status">आप ऑफलाइन हैं — आपका काम सुरक्षित रहेगा</div>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="brand" data-route="home" aria-label="होम">
+        <span class="brand-mark" aria-hidden="true">क</span>
+        <span><strong>कारीगर साथी</strong><small>आपका AI व्यापार सहायक</small></span>
+      </button>
+      <div class="top-actions">
+        <button class="language-button" id="languageButton" aria-label="भाषा बदलें">English</button>
+        <button class="icon-button notification-button" id="notificationButton" aria-label="सूचनाएँ">
+          <span aria-hidden="true">🔔</span><span class="notification-dot"></span>
+        </button>
+      </div>
+    </header>
+
+    <main id="mainContent">
+      <section class="view active" id="homeView" data-view="home">
+        <div class="hero-card">
+          <div>
+            <p class="eyebrow" id="todayLabel">आज आपका व्यापार</p>
+            <h1 id="greetingText">नमस्ते, मीरा जी 👋</h1>
+            <p id="heroSubtitle">आपकी दुकान अच्छी चल रही है। आज 3 नए ऑर्डर मिले हैं।</p>
+          </div>
+          <div class="hero-illustration" aria-hidden="true">
+            <span>🧺</span><i></i><b>AI</b>
+          </div>
+        </div>
+
+        <div class="stats-grid" aria-label="व्यापार सारांश">
+          <article class="stat-card"><span class="stat-icon teal">📦</span><div><strong id="productCount">12</strong><small>सक्रिय उत्पाद</small></div></article>
+          <article class="stat-card"><span class="stat-icon amber">🛍️</span><div><strong id="orderCount">3</strong><small>आज के ऑर्डर</small></div></article>
+          <article class="stat-card wide"><span class="stat-icon rose">₹</span><div><strong id="salesTotal">₹18,450</strong><small>इस महीने बिक्री</small></div><span class="positive">↗ 12%</span></article>
+        </div>
+
+        <section class="assistant-card" aria-labelledby="assistantTitle">
+          <div class="assistant-orb" aria-hidden="true"><span>✦</span></div>
+          <div class="assistant-copy">
+            <span class="online-pill">● AI तैयार है</span>
+            <h2 id="assistantTitle">क्या मदद चाहिए?</h2>
+            <p id="assistantPrompt">बोलकर बताइए — “नया उत्पाद जोड़ो”</p>
+          </div>
+          <button class="mic-button" id="micButton" aria-label="बोलकर निर्देश दें"><span>🎙️</span></button>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading"><div><p class="eyebrow">जल्दी शुरू करें</p><h2>आप क्या करना चाहते हैं?</h2></div></div>
+          <div class="quick-grid">
+            <button class="quick-card primary" id="addProductButton"><span>＋</span><strong>नया उत्पाद</strong><small>फोटो लेकर जोड़ें</small></button>
+            <button class="quick-card" data-route="catalogue"><span>▦</span><strong>मेरी सूची</strong><small>उत्पाद देखें</small></button>
+            <button class="quick-card" data-route="orders"><span>🧾</span><strong>ऑर्डर</strong><small>ऑर्डर संभालें</small></button>
+            <button class="quick-card" id="pricingButton"><span>₹</span><strong>सही कीमत</strong><small>AI सुझाव पाएँ</small></button>
+          </div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading"><div><p class="eyebrow">आपके उत्पाद</p><h2>अच्छा प्रदर्शन</h2></div><button class="text-button" data-route="catalogue">सभी देखें →</button></div>
+          <div class="product-scroll" id="topProducts"></div>
+        </section>
+
+        <section class="tip-card">
+          <div class="tip-icon">💡</div>
+          <div><strong>आज का सुझाव</strong><p>“हाथ से बना” शब्द वाले उत्पादों को इस सप्ताह 18% अधिक लोग देख रहे हैं।</p></div>
+          <button aria-label="सुझाव बंद करें" id="dismissTip">×</button>
+        </section>
+      </section>
+
+      <section class="view" id="catalogueView" data-view="catalogue">
+        <div class="page-heading"><div><p class="eyebrow">डिजिटल दुकान</p><h1>मेरी उत्पाद सूची</h1><p>अपने सभी उत्पाद एक जगह से संभालें</p></div><button class="primary-button compact" id="catalogueAddButton">＋ जोड़ें</button></div>
+        <div class="search-row"><label class="search-box"><span>⌕</span><input id="productSearch" type="search" placeholder="उत्पाद खोजें" autocomplete="off"></label><button class="filter-button" id="filterButton">☷ फ़िल्टर</button></div>
+        <div class="filter-chips" id="filterChips"><button class="chip active" data-filter="all">सभी</button><button class="chip" data-filter="live">ऑनलाइन</button><button class="chip" data-filter="draft">ड्राफ्ट</button><button class="chip" data-filter="low">कम स्टॉक</button></div>
+        <div class="catalogue-list" id="catalogueList"></div>
+        <div class="empty-state hidden" id="catalogueEmpty"><span>🔍</span><h2>कोई उत्पाद नहीं मिला</h2><p>दूसरा नाम खोजकर देखें</p></div>
+      </section>
+
+      <section class="view" id="ordersView" data-view="orders">
+        <div class="page-heading"><div><p class="eyebrow">बिक्री प्रबंधन</p><h1>ऑर्डर</h1><p>नए ऑर्डर तैयार करके भेजें</p></div><span class="count-badge">3 नए</span></div>
+        <div class="order-tabs"><button class="active" data-order-filter="all">सभी</button><button data-order-filter="new">नए</button><button data-order-filter="packed">पैक</button><button data-order-filter="sent">भेजे गए</button></div>
+        <div class="order-list" id="orderList"></div>
+      </section>
+
+      <section class="view" id="insightsView" data-view="insights">
+        <div class="page-heading"><div><p class="eyebrow">आसान जानकारी</p><h1>व्यापार की प्रगति</h1><p>इस महीने का सरल हिसाब</p></div><button class="icon-button" id="downloadReport" aria-label="रिपोर्ट डाउनलोड करें">⇩</button></div>
+        <article class="revenue-card"><p>सितंबर की बिक्री</p><h2>₹18,450</h2><span>पिछले महीने से 12% अधिक</span><div class="bar-chart" aria-label="साप्ताहिक बिक्री ग्राफ"><i style="height:38%"></i><i style="height:55%"></i><i style="height:46%"></i><i style="height:78%"></i><i style="height:63%"></i><i style="height:92%"></i><i class="current" style="height:72%"></i></div><div class="chart-labels"><span>सोम</span><span>मंगल</span><span>बुध</span><span>गुरु</span><span>शुक्र</span><span>शनि</span><span>आज</span></div></article>
+        <div class="insight-grid"><article><span>👀</span><strong>1,284</strong><small>उत्पाद देखे गए</small></article><article><span>♡</span><strong>86</strong><small>पसंद किए गए</small></article></div>
+        <section class="section-block"><div class="section-heading"><div><p class="eyebrow">AI की सलाह</p><h2>बिक्री बढ़ाने के तरीके</h2></div></div><div class="recommendation-list"><article><span class="recommendation-icon">📷</span><div><strong>2 तस्वीरें और जोड़ें</strong><p>नीली मधुबनी पेंटिंग पर अधिक तस्वीरों से बिक्री बढ़ सकती है।</p></div><button data-route="catalogue">करें</button></article><article><span class="recommendation-icon">₹</span><div><strong>कीमत में छोटा बदलाव</strong><p>बांस की टोकरी की सुझाई कीमत ₹899 है।</p></div><button id="insightPricingButton">देखें</button></article></div></section>
+      </section>
+
+      <section class="view" id="profileView" data-view="profile">
+        <div class="profile-hero"><div class="avatar-large">म</div><h1>मीरा देवी</h1><p>मधुबनी कलाकार · बिहार</p><span>✓ पहचान सत्यापित</span></div>
+        <div class="profile-menu"><button><span>🏪</span><div><strong>दुकान की जानकारी</strong><small>नाम, पता और कहानी</small></div><b>›</b></button><button><span>🌐</span><div><strong>भाषा</strong><small>हिंदी</small></div><b>›</b></button><button><span>🔗</span><div><strong>बिक्री चैनल</strong><small>2 चैनल जुड़े हैं</small></div><b>›</b></button><button><span>❓</span><div><strong>मदद और प्रशिक्षण</strong><small>वीडियो और सहायता</small></div><b>›</b></button><button id="resetDemo"><span>↻</span><div><strong>डेमो रीसेट करें</strong><small>मूल नमूना डेटा वापस लाएँ</small></div><b>›</b></button></div>
+        <p class="version-text">कारीगर साथी · संस्करण 1.0</p>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="मुख्य नेविगेशन">
+      <button class="active" data-route="home"><span>⌂</span><small>होम</small></button>
+      <button data-route="catalogue"><span>▦</span><small>उत्पाद</small></button>
+      <button data-route="orders"><span>▤</span><small>ऑर्डर</small><i>3</i></button>
+      <button data-route="insights"><span>⌁</span><small>प्रगति</small></button>
+      <button data-route="profile"><span>○</span><small>प्रोफ़ाइल</small></button>
+    </nav>
+  </div>
+
+  <div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-sheet">
+      <div class="modal-header"><div><p class="eyebrow">AI उत्पाद सहायक</p><h2 id="modalTitle">नया उत्पाद जोड़ें</h2></div><button class="close-button" id="closeModal" aria-label="बंद करें">×</button></div>
+      <div class="stepper" aria-label="प्रगति"><span class="active">1</span><i></i><span>2</span><i></i><span>3</span></div>
+
+      <form id="productForm">
+        <section class="form-step active" data-step="1">
+          <div class="upload-zone" id="uploadZone" tabindex="0" role="button" aria-label="उत्पाद की तस्वीर चुनें">
+            <input id="productImage" type="file" accept="image/*" capture="environment" hidden>
+            <img id="imagePreview" alt="चुनी हुई उत्पाद तस्वीर" hidden>
+            <div id="uploadPrompt"><span>📷</span><strong>उत्पाद की फोटो लें</strong><p>या गैलरी से चुनें</p><button type="button" class="secondary-button">फोटो चुनें</button></div>
+          </div>
+          <label class="field-label">उत्पाद का नाम<input id="productName" required maxlength="60" placeholder="जैसे — मधुबनी पेंटिंग"></label>
+          <div class="two-fields"><label class="field-label">श्रेणी<select id="productCategory"><option value="हस्तकला">हस्तकला</option><option value="पेंटिंग">पेंटिंग</option><option value="वस्त्र">वस्त्र</option><option value="घर सजावट">घर सजावट</option><option value="आभूषण">आभूषण</option></select></label><label class="field-label">स्टॉक<input id="productStock" required type="number" min="1" max="999" value="10"></label></div>
+          <label class="field-label">इसके बारे में थोड़ा बताएं<textarea id="productDetails" rows="3" placeholder="सामग्री, आकार या बनाने का तरीका"></textarea></label>
+          <button type="button" class="voice-field" id="voiceDetails"><span>🎙️</span><div><strong>लिखना मुश्किल है?</strong><small>बोलकर जानकारी दें</small></div></button>
+        </section>
+
+        <section class="form-step" data-step="2">
+          <div class="ai-progress" id="aiProgress"><div class="ai-spinner">✦</div><h3>AI आपका उत्पाद तैयार कर रहा है</h3><p id="aiProgressText">तस्वीर साफ की जा रही है…</p><div class="progress-track"><i id="progressBar"></i></div></div>
+          <div class="ai-results hidden" id="aiResults">
+            <div class="success-banner">✓ उत्पाद की जानकारी तैयार है</div>
+            <div class="result-card"><div class="result-heading"><span>✨</span><strong>साफ की गई तस्वीर</strong><em>AI बेहतर</em></div><div class="enhanced-preview"><img id="enhancedImage" alt="AI द्वारा बेहतर तस्वीर"><span>पहले</span><b>AI के बाद</b></div></div>
+            <div class="result-card"><div class="result-heading"><span>अ</span><strong>उत्पाद विवरण</strong><button type="button" id="editDescription">बदलें</button></div><label>हिंदी<textarea id="hindiDescription" rows="3"></textarea></label><label>English<textarea id="englishDescription" rows="3"></textarea></label></div>
+            <div class="result-card price-result"><div class="result-heading"><span>₹</span><strong>कीमत का सुझाव</strong><em>बाजार के अनुसार</em></div><div class="price-choice"><div><small>सुझाई कीमत</small><strong id="recommendedPrice">₹899</strong></div><label>आपकी कीमत ₹<input id="finalPrice" type="number" min="1" value="899"></label></div><p>समान हस्तनिर्मित उत्पाद ₹799 से ₹1,099 में बिक रहे हैं।</p></div>
+          </div>
+        </section>
+
+        <section class="form-step" data-step="3">
+          <div class="publish-preview"><div class="publish-image"><img id="publishImage" alt="उत्पाद तस्वीर"><span>बिक्री के लिए तैयार</span></div><div><p class="eyebrow">आपका उत्पाद</p><h3 id="publishName">उत्पाद नाम</h3><p id="publishDescription"></p><strong id="publishPrice">₹899</strong></div></div>
+          <fieldset class="channel-fieldset"><legend>कहाँ बेचना है?</legend><label><input type="checkbox" name="channel" value="ONDC" checked><span><b>ONDC</b><small>पूरे भारत के खरीदार</small></span><i>✓</i></label><label><input type="checkbox" name="channel" value="Government e-Marketplace"><span><b>सरकारी ई-मार्केट</b><small>B2B और सरकारी खरीदार</small></span><i>✓</i></label><label><input type="checkbox" name="channel" value="My Digital Catalogue" checked><span><b>मेरी डिजिटल सूची</b><small>WhatsApp पर साझा करें</small></span><i>✓</i></label></fieldset>
+          <div class="ready-checklist"><p><span>✓</span> तस्वीर साफ और आकर्षक है</p><p><span>✓</span> हिंदी और अंग्रेज़ी विवरण तैयार है</p><p><span>✓</span> बाजार के अनुसार कीमत रखी गई है</p></div>
+        </section>
+
+        <div class="modal-footer"><button type="button" class="secondary-button" id="backStep" hidden>पीछे</button><button type="submit" class="primary-button" id="nextStep">आगे बढ़ें</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-backdrop small-modal" id="pricingModal" role="dialog" aria-modal="true" aria-labelledby="pricingTitle" hidden>
+    <div class="modal-sheet">
+      <div class="modal-header"><div><p class="eyebrow">AI कीमत सहायक</p><h2 id="pricingTitle">सही कीमत पाएँ</h2></div><button class="close-button" data-close="pricingModal" aria-label="बंद करें">×</button></div>
+      <div class="price-tool"><label class="field-label">उत्पाद<select id="pricingProduct"></select></label><div class="price-meter"><span>कम</span><span>सही</span><span>अधिक</span><i></i></div><div class="suggested-price"><small>सुझाई गई कीमत</small><strong id="pricingSuggestion">₹899</strong><p>बाजार, सामग्री और मेहनत के आधार पर</p></div><button class="primary-button full" id="applyPrice">यह कीमत रखें</button></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
