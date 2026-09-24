@@ -8,6 +8,7 @@ import sqlite3
 import threading
 import time
 import uuid
+import os
 from collections import defaultdict, deque
 from pathlib import Path
 from typing import Literal
@@ -19,13 +20,18 @@ from pydantic import BaseModel, Field
 
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
+
+if os.environ.get("VERCEL"):
+    DATA_DIR = Path("/tmp/data")
+else:
+    DATA_DIR = BASE_DIR / "data"
+
 UPLOAD_DIR = DATA_DIR / "uploads"
 DATABASE_PATH = DATA_DIR / "karigar_saathi.db"
 MAX_IMAGE_BYTES = 6 * 1024 * 1024
 
-DATA_DIR.mkdir(exist_ok=True)
-UPLOAD_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(exist_ok=True, parents=True)
+UPLOAD_DIR.mkdir(exist_ok=True, parents=True)
 
 database_lock = threading.Lock()
 request_windows: dict[str, deque[float]] = defaultdict(deque)
